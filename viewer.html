@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown Viewer</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #24292f;
+            background-color: #ffffff;
+        }
+
+        .container {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            border-bottom: 1px solid #d0d7de;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .file-picker {
+            margin-bottom: 20px;
+        }
+
+        .file-input-wrapper {
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .file-input-label {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #2da44e;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+
+        .file-input-label:hover {
+            background-color: #2c974b;
+        }
+
+        .file-name {
+            display: inline-block;
+            margin-left: 12px;
+            color: #57606a;
+            font-size: 14px;
+        }
+
+        #content {
+            background-color: #ffffff;
+        }
+
+        #content h1 {
+            font-size: 2em;
+            font-weight: 600;
+            padding-bottom: 0.3em;
+            border-bottom: 1px solid #d0d7de;
+            margin-top: 24px;
+            margin-bottom: 16px;
+        }
+
+        #content h2 {
+            font-size: 1.5em;
+            font-weight: 600;
+            padding-bottom: 0.3em;
+            border-bottom: 1px solid #d0d7de;
+            margin-top: 24px;
+            margin-bottom: 16px;
+        }
+
+        #content h3 {
+            font-size: 1.25em;
+            font-weight: 600;
+            margin-top: 24px;
+            margin-bottom: 16px;
+        }
+
+        #content h4, #content h5, #content h6 {
+            font-weight: 600;
+            margin-top: 24px;
+            margin-bottom: 16px;
+        }
+
+        #content p {
+            margin-bottom: 16px;
+        }
+
+        #content ul, #content ol {
+            padding-left: 2em;
+            margin-bottom: 16px;
+        }
+
+        #content li {
+            margin-bottom: 8px;
+        }
+
+        #content pre {
+            background-color: #f6f8fa;
+            border-radius: 6px;
+            padding: 16px;
+            overflow: auto;
+            margin-bottom: 16px;
+            border: 1px solid #d0d7de;
+        }
+
+        #content code {
+            background-color: #f6f8fa;
+            padding: 0.2em 0.4em;
+            border-radius: 6px;
+            font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+            font-size: 85%;
+        }
+
+        #content pre code {
+            background-color: transparent;
+            padding: 0;
+            font-size: 100%;
+            display: block;
+        }
+
+        #content blockquote {
+            padding: 0 1em;
+            color: #57606a;
+            border-left: 0.25em solid #d0d7de;
+            margin-bottom: 16px;
+        }
+
+        #content table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 16px;
+            overflow: auto;
+            display: block;
+        }
+
+        #content table th,
+        #content table td {
+            padding: 6px 13px;
+            border: 1px solid #d0d7de;
+        }
+
+        #content table th {
+            font-weight: 600;
+            background-color: #f6f8fa;
+        }
+
+        #content table tr {
+            background-color: #ffffff;
+            border-top: 1px solid #d0d7de;
+        }
+
+        #content table tr:nth-child(2n) {
+            background-color: #f6f8fa;
+        }
+
+        #content a {
+            color: #0969da;
+            text-decoration: none;
+        }
+
+        #content a:hover {
+            text-decoration: underline;
+        }
+
+        #content hr {
+            height: 0.25em;
+            padding: 0;
+            margin: 24px 0;
+            background-color: #d0d7de;
+            border: 0;
+        }
+
+        #content img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .welcome {
+            text-align: center;
+            padding: 80px 40px;
+            color: #57606a;
+            background-color: #f6f8fa;
+            border-radius: 6px;
+            border: 2px dashed #d0d7de;
+        }
+
+        .welcome h2 {
+            font-size: 24px;
+            margin-bottom: 12px;
+            color: #24292f;
+        }
+
+        .welcome p {
+            font-size: 16px;
+        }
+
+        .error {
+            background-color: #fff1f0;
+            border: 1px solid #ffccc7;
+            border-radius: 6px;
+            padding: 16px;
+            margin: 20px 0;
+            color: #d73a49;
+        }
+
+        .toc {
+            background-color: #f6f8fa;
+            border: 1px solid #d0d7de;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 30px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .toc h3 {
+            margin-top: 0;
+            margin-bottom: 12px;
+            position: sticky;
+            top: 0;
+            background-color: #f6f8fa;
+            padding-bottom: 10px;
+        }
+
+        .toc ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .toc ul ul {
+            padding-left: 20px;
+        }
+
+        .toc li {
+            margin-bottom: 6px;
+        }
+
+        .toc a {
+            color: #0969da;
+            text-decoration: none;
+            display: block;
+            padding: 2px 0;
+        }
+
+        .toc a:hover {
+            text-decoration: underline;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: #0969da;
+            color: white;
+            padding: 12px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            display: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            transition: background-color 0.2s;
+        }
+
+        .back-to-top:hover {
+            background-color: #0860ca;
+        }
+
+        .back-to-top.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Markdown Viewer</h1>
+            <div class="file-picker">
+                <div class="file-input-wrapper">
+                    <input type="file" id="fileInput" accept=".md,.markdown,.txt">
+                    <label for="fileInput" class="file-input-label">Choose Markdown File</label>
+                </div>
+                <span class="file-name" id="fileName"></span>
+            </div>
+        </div>
+        <div id="toc-container"></div>
+        <div id="content">
+            <div class="welcome">
+                <h2>Welcome to Markdown Viewer</h2>
+                <p>Select a markdown file to view it with beautiful formatting</p>
+            </div>
+        </div>
+    </div>
+
+    <a href="#" class="back-to-top" id="backToTop">↑ Top</a>
+
+    <script>
+        // Configure marked
+        marked.setOptions({
+            highlight: function(code, lang) {
+                if (lang && hljs.getLanguage(lang)) {
+                    try {
+                        return hljs.highlight(code, { language: lang }).value;
+                    } catch (err) {}
+                }
+                return hljs.highlightAuto(code).value;
+            },
+            breaks: true,
+            gfm: true
+        });
+
+        // Generate table of contents
+        function generateTOC(markdown) {
+            const headings = [];
+            const lines = markdown.split('\n');
+
+            for (let line of lines) {
+                const match = line.match(/^(#{1,6})\s+(.+)$/);
+                if (match) {
+                    const level = match[1].length;
+                    const text = match[2].trim();
+                    const id = text.toLowerCase()
+                        .replace(/[^\w\s-]/g, '')
+                        .replace(/\s+/g, '-');
+                    headings.push({ level, text, id });
+                }
+            }
+
+            if (headings.length === 0) return '';
+
+            let tocHTML = '<div class="toc"><h3>Table of Contents</h3><ul>';
+            let currentLevel = 1;
+
+            for (let heading of headings) {
+                while (currentLevel < heading.level) {
+                    tocHTML += '<ul>';
+                    currentLevel++;
+                }
+                while (currentLevel > heading.level) {
+                    tocHTML += '</ul>';
+                    currentLevel--;
+                }
+                tocHTML += `<li><a href="#${heading.id}">${heading.text}</a></li>`;
+            }
+
+            while (currentLevel > 1) {
+                tocHTML += '</ul>';
+                currentLevel--;
+            }
+
+            tocHTML += '</ul></div>';
+            return tocHTML;
+        }
+
+        // Add IDs to headings for TOC navigation
+        function addHeadingIds(html) {
+            return html.replace(/<h([1-6])>(.+?)<\/h\1>/g, (match, level, text) => {
+                const id = text.toLowerCase()
+                    .replace(/<[^>]*>/g, '')
+                    .replace(/[^\w\s-]/g, '')
+                    .replace(/\s+/g, '-');
+                return `<h${level} id="${id}">${text}</h${level}>`;
+            });
+        }
+
+        // Load and render markdown content
+        function renderMarkdown(markdown, filename) {
+            const contentDiv = document.getElementById('content');
+            const tocContainer = document.getElementById('toc-container');
+            const fileNameSpan = document.getElementById('fileName');
+
+            try {
+                // Update filename display
+                fileNameSpan.textContent = filename;
+
+                // Generate TOC
+                const tocHTML = generateTOC(markdown);
+                tocContainer.innerHTML = tocHTML;
+
+                // Render markdown
+                let html = marked.parse(markdown);
+                html = addHeadingIds(html);
+                contentDiv.innerHTML = html;
+
+                // Highlight code blocks
+                document.querySelectorAll('pre code').forEach((block) => {
+                    hljs.highlightElement(block);
+                });
+
+                // Scroll to top
+                window.scrollTo(0, 0);
+
+            } catch (error) {
+                contentDiv.innerHTML = `<div class="error"><strong>Error:</strong> ${error.message}</div>`;
+                console.error('Error rendering markdown:', error);
+            }
+        }
+
+        // File input handler
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+
+            reader.onload = function(event) {
+                const markdown = event.target.result;
+                renderMarkdown(markdown, file.name);
+            };
+
+            reader.onerror = function(error) {
+                document.getElementById('content').innerHTML =
+                    `<div class="error"><strong>Error reading file:</strong> ${error}</div>`;
+            };
+
+            reader.readAsText(file);
+        });
+
+        // Back to top button
+        const backToTop = document.getElementById('backToTop');
+
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 300) {
+                backToTop.classList.add('show');
+            } else {
+                backToTop.classList.remove('show');
+            }
+        });
+
+        backToTop.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Smooth scrolling for TOC links
+        document.addEventListener('click', function(e) {
+            if (e.target.matches('.toc a')) {
+                e.preventDefault();
+                const targetId = e.target.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
+        });
+    </script>
+</body>
+</html>
