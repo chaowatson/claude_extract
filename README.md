@@ -1,7 +1,7 @@
 # Claude Chat History Viewer
 
-> **Course:** CMU 17-316
-> **Purpose:** A better way to view and submit Claude Code chat history in markdown format
+- **Course:** CMU 17-316
+- **Purpose:** A better way to view and submit Claude Code chat history in markdown format
 
 ## Overview
 
@@ -9,15 +9,10 @@ This repository contains my Claude Code chat history for CMU 17-316, along with 
 
 ## What's Inside
 
-- **`viewer.html`** - Static web page for visualizing markdown files with:
-  - GitHub-style formatting
-  - Automatic table of contents generation
-  - Syntax highlighting for code blocks
-  - Responsive design
-  - Smooth scrolling navigation
-  - "Back to top" button
+- **`viewer.html`** - Modern static web page for visualizing markdown files with:
+  -  **Dark/Light mode toggle** - Switch between themes with saved preference
 
-- **`P4ClaudeChatHistory.md`** - Complete chat history from Claude Code sessions
+- **`P4ClaudeChatHistory.md`** - Complete chat history from Claude Code sessions of P4 by Watson
 
 - **`extract_chat_history.py`** - Python script used to extract chat history from Claude Code
 
@@ -38,15 +33,13 @@ This repository contains my Claude Code chat history for CMU 17-316, along with 
    Or simply double-click `viewer.html` in your file browser
 
 3. **Load the chat history**
-   - Click the "Choose Markdown File" button
-   - Select `P4ClaudeChatHistory.md`
+   - Click the "Choose File" button
+   - Select the chat history you want to view
    - Enjoy a beautifully formatted, easy-to-navigate view of the chat history!
 
-### Features
-
-- **No server required** - Works entirely in your browser
-- **No CORS issues** - Uses browser's FileReader API
-- **Fast rendering** - Even with large markdown files
+4. **Customize your experience** (Optional)
+   - Click the theme toggle button (🌙/☀️) in the top-right corner to switch between dark and light modes
+   - Your preference will be saved for future visits
 
 ## Why This Approach?
 
@@ -61,10 +54,12 @@ Claude Code chat histories can become quite lengthy, and traditional markdown vi
 
 The viewer uses:
 - [Marked.js](https://marked.js.org/) for markdown parsing
-- [Highlight.js](https://highlightjs.org/) for syntax highlighting
-- Pure CSS for GitHub-style formatting
+- [Highlight.js](https://highlightjs.org/) for syntax highlighting with dual themes (Atom One Dark/Light)
+- CSS Variables for dynamic theming
+- LocalStorage API for theme persistence
+- Modern CSS (gradients, glassmorphism, animations)
 - Vanilla JavaScript (no frameworks needed)
 
 ---
 
-**Note:** This is the best solution I've found for submitting Claude Code chat history while maintaining readability and usability. Feel free to use this approach for your own submissions!
+### **Note:** This is the best solution I've found for submitting Claude Code chat history while maintaining readability and usability. Feel free to use this approach for your own submissions!
