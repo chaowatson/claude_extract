@@ -3,28 +3,17 @@ import json
 import os
 from datetime import datetime
 from pathlib import Path
+import glob
 
-# Directories to search
-dirs = [
-    "/Users/watsonchao/.claude/projects/-Users-watsonchao-CMU-Courses-fall25-AITools-P3-team-code-cruise",
-    "/Users/watsonchao/.claude/projects/-Users-watsonchao-CMU-Courses-fall25-AITools-P3-team-code-cruise-ride-app"
-]
+# Directory to search
+p2_dir = "/Users/watsonchao/.claude/projects/-Users-watsonchao-CMU-Courses-fall25-AITools-P2-team-code-cruise"
 
-# Files from Oct 22-23
-oct_22_23_files = [
-    "/Users/watsonchao/.claude/projects/-Users-watsonchao-CMU-Courses-fall25-AITools-P3-team-code-cruise/490b8c29-bd67-436e-ba74-af548bc38616.jsonl",
-    "/Users/watsonchao/.claude/projects/-Users-watsonchao-CMU-Courses-fall25-AITools-P3-team-code-cruise/7c1d101f-a8d0-4c1b-a4e7-338bb7afbe51.jsonl",
-    "/Users/watsonchao/.claude/projects/-Users-watsonchao-CMU-Courses-fall25-AITools-P3-team-code-cruise/87ed2b99-7436-48ef-969c-bd4ad248a159.jsonl",
-    "/Users/watsonchao/.claude/projects/-Users-watsonchao-CMU-Courses-fall25-AITools-P3-team-code-cruise/c43ef406-68ff-498f-b3b7-9dcdb347494d.jsonl",
-    "/Users/watsonchao/.claude/projects/-Users-watsonchao-CMU-Courses-fall25-AITools-P3-team-code-cruise/e1da2245-d899-4332-9af1-811fa39e72bd.jsonl",
-    "/Users/watsonchao/.claude/projects/-Users-watsonchao-CMU-Courses-fall25-AITools-P3-team-code-cruise/96fbcee4-a15d-42f1-9151-839b8246ee5c.jsonl",
-    "/Users/watsonchao/.claude/projects/-Users-watsonchao-CMU-Courses-fall25-AITools-P3-team-code-cruise/e51b3979-7b92-4b56-8cf4-0867da116f1e.jsonl",
-    "/Users/watsonchao/.claude/projects/-Users-watsonchao-CMU-Courses-fall25-AITools-P3-team-code-cruise-ride-app/ce36f320-940f-41c2-b209-e0bcfb5c20f7.jsonl"
-]
+# Find all .jsonl files in the P2 directory
+jsonl_files = glob.glob(os.path.join(p2_dir, "*.jsonl"))
 
 all_messages = []
 
-for file_path in oct_22_23_files:
+for file_path in jsonl_files:
     if not os.path.exists(file_path):
         continue
 
@@ -68,7 +57,7 @@ all_messages.sort(key=lambda x: x['timestamp'] if x['timestamp'] else '')
 print(f"\nTotal messages extracted: {len(all_messages)}")
 
 # Format as markdown
-output = ["# Claude Code Chat History - October 22-23, 2025", ""]
+output = ["# Claude Code Chat History - P2 Project", ""]
 
 current_conversation = None
 message_count = 0
@@ -143,8 +132,7 @@ for msg in all_messages:
 output.append(f"\n---\n\n*Total messages: {message_count}*")
 
 # Write to output file
-output_file = "/Users/watsonchao/CMU/Courses/fall25/AITools/P4ClaudeChatHistory.md"
-os.makedirs(os.path.dirname(output_file), exist_ok=True)
+output_file = "RedoP2ClaudeChatHistory.md"
 
 with open(output_file, 'w', encoding='utf-8') as f:
     f.write('\n'.join(output))
