@@ -6,10 +6,10 @@ from pathlib import Path
 import glob
 
 # Directory to search
-p2_dir = "/Users/watsonchao/.claude/projects/-Users-watsonchao-CMU-Courses-fall25-AITools-P6-team-code-cruise"
+p7_dir = "/Users/watsonchao/.claude/projects/-Users-watsonchao-CMU-Courses-fall25-AITools-P6-team-code-cruise"
 
-# Find all .jsonl files in the P2 directory
-jsonl_files = glob.glob(os.path.join(p2_dir, "*.jsonl"))
+# Only the postmortem chat history file
+jsonl_files = [os.path.join(p7_dir, "a495de17-2b46-4418-9554-465456d846c2.jsonl")]
 
 all_messages = []
 
@@ -57,7 +57,7 @@ all_messages.sort(key=lambda x: x['timestamp'] if x['timestamp'] else '')
 print(f"\nTotal messages extracted: {len(all_messages)}")
 
 # Format as markdown
-output = ["# Claude Code Chat History - P6 Project", ""]
+output = ["# Claude Code Chat History - P7 Postmortem", ""]
 
 current_conversation = None
 message_count = 0
@@ -132,7 +132,7 @@ for msg in all_messages:
 output.append(f"\n---\n\n*Total messages: {message_count}*")
 
 # Write to output file
-output_file = "P6ClaudeChatHistory.md"
+output_file = "P7ClaudeChatHistory.md"
 
 with open(output_file, 'w', encoding='utf-8') as f:
     f.write('\n'.join(output))
